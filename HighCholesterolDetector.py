@@ -31,10 +31,11 @@ try:
     response = conn.getresponse()
     data = response.read()
     # print(data)
-    my_json = json.loads(data)
-    print(my_json)
-    print(type(my_json))
-    print("The id is: ",my_json['Id'])
+    json_data = json.loads(data)
+    print(json_data)
+    print("The type is ",type(json_data))
+    print("The length is ",len(json_data))
+    # print("The image : ",json_data['Id'])
     # Decode UTF-8 bytes to Unicode, and convert single quotes 
     # to double quotes to make it valid JSON
     # my_json = data.decode('utf8').replace("'", '"')
