@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-orig_img = cv2.imread("images/eye.jpg") # read image and assign to variable
+orig_img = cv2.imread("eye.jpg") # read image and assign to variable
 cv2.imshow("orig_img", orig_img) # display original image
 gray_img = cv2.cvtColor(orig_img, cv2.COLOR_BGR2GRAY)
 img = cv2.medianBlur(gray_img, 5)
