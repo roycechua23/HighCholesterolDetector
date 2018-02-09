@@ -57,12 +57,12 @@ class App(QMainWindow):
 
         self.show()
 
-    def switchWindow(self):
+    def switchWindow(self):#PANG TAWAG SA IBANG WINDOW
         self.second = Dialog()
         self.close()
 
-    def closeWindow(self):
-        
+    def closeWindow(self):#PANG TAWAG SA CLOSE
+          #MESSAGEBOX  
         reply = QMessageBox.question(self, 'Message',
             "Are you sure to quit?", QMessageBox.Yes | 
             QMessageBox.No, QMessageBox.No)
@@ -81,11 +81,11 @@ class Dialog(QDialog):
     def __init__(self):
         super().__init__()
         self.createFormGroupBox()
- 
+ #BUTTON
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttonBox.accepted.connect(self.accept)
         buttonBox.rejected.connect(self.reject)
- 
+  #Specific size ng Window
         mainLayout = QVBoxLayout()
         mainLayout.addWidget(self.formGroupBox)
         mainLayout.addWidget(buttonBox)
@@ -96,7 +96,7 @@ class Dialog(QDialog):
         self.setLayout(mainLayout)
         self.setWindowTitle("HIGH CHOLESTEROL DETECTOR")
 
-
+#TEXTFIELD
     def createFormGroupBox(self):
       
         self.formGroupBox = QGroupBox("FORM")
@@ -117,7 +117,7 @@ class Dialog(QDialog):
 
         self.show()
 
-    def accept(self):
+    def accept(self):#PANG TAWAG SA IBANG WINDOW
         self.third = imagecapture()
         #self.third = acceptance()
         #self.dialog = Dialog()
@@ -126,6 +126,7 @@ class Dialog(QDialog):
  
 
 #THIRD WINDOW
+#''''''''''''''''''''''PAKI TULOY NALANG PO ITONG PART''''''''''''''''''''''
 class imagecapture(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -139,16 +140,57 @@ class imagecapture(QMainWindow):
         palette.setBrush(10, QBrush(oimg))
         self.setPalette(palette) # this is used to specify the GUI background image
 
-        
+       
+        self.okButton = QPushButton('Capture', self)
+        self.okButton.resize(100,50)
+        self.okButton.move(50,100)  # button.move(x,y)
+        self.okButton.clicked.connect(self.cam)
 
-        self.show()
+        self.cButton = QPushButton('Cancel', self)
+        self.cButton.resize(100,50)
+        self.cButton.move(50, 250)  # button.move(x,y)
+        # self.cButton.clicked.connect(self.Cancel)
+            
         
-    def switchwindow(self):
-        self.acceptancewindow = acceptance()
+        self.show()
+ 
+
+    def cam(self):
+        
+        cap = cv2.VideoCapture(0)
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        while(cap.isOpened()):
+            ret, frame = cap.read()
+            if ret==True:
+                cv2.imwrite('out.jpg', frame)
+                cv2.imshow('frame',frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'): 
+                    break   
+            else:
+                break
+
+    # Release everything if job is finished
+        cap.release()
+        cv2.destroyAllWindows()
+        cv2.imshow('Capture Frame', frame)
+        cv2.waitKey(0)
+        self.acceptancewindow = acceptance("out.jpg")
         self.close()
+
+    # def switchWindow(self):
+    #     self.fourth = QWidget()
+    #     self.close()
+
+    # def switchWindow(self):
+    #     self.fifth = Dialog()
+    #     self.close()
+
+    # def switchwindow(self):
+    #     self.acceptancewindow = acceptance()
+    #     self.close()
         
 class acceptance(QWidget):
-
+#FUNCTION SA BUTTON NA ANALYZE
     def analyzeImage(self, imagepath):
         print("analyzeImage function")
         headers = {
@@ -160,7 +202,7 @@ class acceptance(QWidget):
         params = urllib.parse.urlencode({
             # Request parameters
             'application': 'Embedded2',
-            # 'iterationId': '146138b6ca4c473ab74631f586e703f6',
+            # 'iterationId': '54b5827fe35c425e8e1f41ad596603b9',
         })
         print("Opening imagepath")
         body = open(imagepath, 'rb')
@@ -168,7 +210,7 @@ class acceptance(QWidget):
 
         try:
             print("Reading image..")
-            image = cv2.imread("normaleye.jpg")
+            image = cv2.imread(imagepath)
             cv2.imshow("Image",image)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
@@ -196,9 +238,9 @@ class acceptance(QWidget):
 
     def Analyze(self):
         print("Load this function")
-        self.analyzeImage("eye.jpg")
+        self.analyzeImage(self.inputimage)
 
-    def __init__(self):
+    def __init__(self,imagepath):
         super().__init__() 
         self.title= "HIGH CHOLESTEROL DETECTOR"
         self.x=200 # or left
@@ -211,7 +253,8 @@ class acceptance(QWidget):
         self.screenie = self.appli.desktop().availableGeometry(-1)
         self.width, self.height = self.screenie.width(), self.screenie.height()
  
-        self.cam()
+        # self.cam()
+        self.inputimage=imagepath
 
         #Set frame to center
         self.qtRectangle = self.frameGeometry()
@@ -221,23 +264,23 @@ class acceptance(QWidget):
 
 
 
-    def cam(self):
+    # def cam(self):
         
-        cap = cv2.VideoCapture(0)
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        while(cap.isOpened()):
-            ret, frame = cap.read()
-            if ret==True:
-                cv2.imwrite('out.jpg', frame)
-                cv2.imshow('frame',frame)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break   
-            else:
-                break
+    #     cap = cv2.VideoCapture(0)
+    #     fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    #     while(cap.isOpened()):
+    #         ret, frame = cap.read()
+    #         if ret==True:
+    #             cv2.imwrite('out.jpg', frame)
+    #             cv2.imshow('frame',frame)
+    #             if cv2.waitKey(1) & 0xFF == ord('q'):
+    #                 break   
+    #         else:
+    #             break
 
-    # Release everything if job is finished
-        cap.release()
-        cv2.destroyAllWindows()
+    # # Release everything if job is finished
+    #     cap.release()
+    #     cv2.destroyAllWindows()
 
         self.initUI()
 
@@ -253,10 +296,10 @@ class acceptance(QWidget):
         self.okButton.move(350,750)  # button.move(x,y)
         self.okButton.clicked.connect(self.switchWindow)
 
-        self.cancelButton = QPushButton('Analyze', self)
-        self.cancelButton.resize(750,50)
-        self.cancelButton.move(350, 800)  # button.move(x,y)
-        self.cancelButton.clicked.connect(self.Analyze)
+        self.cButton = QPushButton('Analyze', self)
+        self.cButton.resize(750,50)
+        self.cButton.move(350, 800)  # button.move(x,y)
+        self.cButton.clicked.connect(self.Analyze)
 
         
         self.show()
@@ -265,10 +308,10 @@ class acceptance(QWidget):
         self.fourth = QWidget()
         self.close()
 
-    def switchWindow(self):
-        self.fifth = Dialog()
+    # def switchWindow(self):
+    #     self.fifth = Dialog()
    
-        self.show()
+    #     self.show()
 
 
 if __name__=='__main__':
