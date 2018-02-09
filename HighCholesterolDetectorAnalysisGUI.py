@@ -94,8 +94,10 @@ class MainScreen(QMainWindow):
         QMessageBox.information(self, "Analysis Result",
                                         "\n"+self.analyzeImage("normaleye.jpg"))
         
+        self.exitButton = QPushButton("Exit",self)
+        self.exitButton.move(350,400)
+        self.exitButton.clicked.connect(self.close)
         self.show() # this is used to show the contents of the window
-
         
 
 
