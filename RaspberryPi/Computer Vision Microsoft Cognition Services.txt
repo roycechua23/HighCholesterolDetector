@@ -1,0 +1,8 @@
+customvision AI
+pip install "git+https://github.com/Azure/azure-sdk-for-python#egg=azure-cognitiveservices-vision-customvision&subdirectory=azure-cognitiveservices-vision-customvision"
+
+https://github.com/Microsoft/Cognitive-Face-Python
+https://github.com/Microsoft
+
+microsoft face api
+https://pypi.python.org/pypi/cognitive_face
