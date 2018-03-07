@@ -48,7 +48,7 @@ class App(QMainWindow):
         self.setFixedSize(500,300)
 
         # this block of code sets the background image
-        oimg = QImage("window2.jpg") # this is where the image is specified
+        oimg = QImage("backgroundpics/window2.jpg") # this is where the image is specified
         simg = oimg.scaled(QSize(500, 300))
         palette = QPalette()
         palette.setBrush(10, QBrush(oimg))
@@ -127,7 +127,7 @@ class Dialog(QDialog):
 
 
         # this block of code sets the background image
-        oimg = QImage("window7.jpg") # this is where the image is specified
+        oimg = QImage("backgroundpics/window7.jpg") # this is where the image is specified
         palette = QPalette()
         palette.setBrush(10, QBrush(oimg))
         self.setPalette(palette) # this is used to specify the GUI background image
@@ -231,7 +231,7 @@ class imagecapture(QMainWindow):
         self.setWindowTitle("High Cholesterol Analyzer")
         
         # this block of code sets the background image
-        oimg = QImage("background.jpg") # this is where the image is specified
+        oimg = QImage("backgroundpics/background.jpg") # this is where the image is specified
         palette = QPalette()
         palette.setBrush(10, QBrush(oimg))
         self.setPalette(palette) # this is used to specify the GUI background image
