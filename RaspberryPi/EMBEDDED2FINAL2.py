@@ -148,8 +148,13 @@ class Dialog(QDialog):
 
     @pyqtSlot()
     def thirdwin(self):
-
-        #RadioButton GENDER
+        name = self.name_text.text()
+        aged = self.age_text.text()
+        contacted = self.contact_text.text()
+        addressed = self.address_text.text()
+        print(name)
+        
+                #RadioButton GENDER
         if self.female_radio.isChecked():
             self.gender = self.female_radio.text()
         else:
@@ -169,31 +174,9 @@ class Dialog(QDialog):
             self.contact = self.contact_text.text()
             if self.contact[0] == '0': 
                 if len(self.contact) == 11:
-
+                    print(self.contact)
                     #Message
-                    QMessageBox.information(self,"Text Data","Name: {} \nGender: {} \nAge: {} \nContact: {} \nAddress: {}".format(self.name, self.gender,
-                                                                                            self.age,
-                                                                                            self.contact,
-                                                                                            self.address),
-                                            QMessageBox.Ok,QMessageBox.Ok)
-                    # insert code to upload to database
-                    #di pa tapos  wala pang insert
                     
-                    conn = pymysql.connect("localhost","root","","isensdb")
-                    cursor = conn.cursor()
-                    sql = "INSERT INTO patient_record(name,gender,age,contactno,address)VALUES('{}','{}','{}','{}','{}')".format(self.name,
-                                                                                                                     self.gender,
-                                                                                                                       self.age,
-                                                                                                                       self.contact,
-                                                                                                                       self.address)
-                    cursor.execute(sql)
-                    conn.commit()
-                    conn.close()
-					
-                    #jump to next window
-                    self.thirdi = imagecapture()
-
-                    self.close()
                 else:
                     #print("Invalid Contact Number")
                     QMessageBox.warning(self,"Warning", "Invalid Contact number, Input valid number",
@@ -209,8 +192,36 @@ class Dialog(QDialog):
             QMessageBox.warning(self,"Warning", "Invalid Age",
                 QMessageBox.NoButton, QMessageBox.NoButton)
             #print("Invalid Input")
+        if name == "" or contacted == "" or addressed == "":
+            QMessageBox.about(self, 'Error','You dont have name')
+        else:
+            conn = pymysql.connect("localhost","root","","isensdb")
+            sql = "Select * From patient_record where name =%s"
+            cursor = conn.cursor()
+            cursor.execute(sql, name)
+            result = cursor.fetchall()
+            if int(len(result)) > 0:
+                QMessageBox.about(self, 'Error', 'You have account')
+            else:
+                conn = pymysql.connect("localhost","root","","isensdb")
+                cursor = conn.cursor()
+                sql = "INSERT INTO patient_record(name,gender,age,contactno,address)VALUES('{}','{}','{}','{}','{}')".format(self.name,
+                                                                                                                                         self.gender,
+                                                                                                                                         self.age,
+                                                                                                                                         self.contact,
+                                                                                                                                         self.address)
+                cursor.execute(sql)
+                conn.commit()
+                conn.close()
+                QMessageBox.information(self,"Text Data","Name: {} \nGender: {} \nAge: {} \nContact: {} \nAddress: {}".format(self.name, self.gender,
+                                                                                            self.age,
+                                                                                            self.contact,
+                                                                                            self.address),
+                                            QMessageBox.Ok,QMessageBox.Ok)
+                    
+                self.thirdi = imagecapture()
 
-        
+                self.close()
     def cancel(self):
         reply = QMessageBox.question(self, 'Message',
             "Are you sure to quit?", QMessageBox.Yes | 
@@ -256,7 +267,7 @@ class imagecapture(QMainWindow):
         camera = PiCamera()
         camera.brightness = 60
         camera.resolution = (640, 480)
-        camera.framerate = 32
+        #camera.framerate = 32
         camera.start_preview(fullscreen=False, window=(100,100,256,192))
         time.sleep(2)
         camera.preview.window=(200,200,256,192)
@@ -288,6 +299,35 @@ class imagecapture(QMainWindow):
         cv2.imwrite("out.jpg",image)
 ##        cv2.waitKey(0)
 ##        cv2.destroyAllWindows()
+        # CROPPING #
+        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        print("Dumaan dito1")
+        eyePair_cascade = cv2.CascadeClassifier('haarcascade_mcs_eyepair_big.xml')
+        print("Dumaan dito")
+        img = cv2.imread("out.jpg")
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        cv2.imshow("Gray", gray)
+        print("Grayscale")
+        cv2.imwrite("Image_Gray.jpg", gray)
+        print("Grayscale 2")
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+        print("Face Detected")
+        for x,y,w,h in faces:
+                roi_gray = gray[y:y+h, x:x+w]
+                roi_color = img[y:y+h, x:x+w]
+                eyes = eyePair_cascade.detectMultiScale(roi_gray)	
+                if len(eyes) == 0: return	
+                for (ex,ey,ew,eh) in eyes:
+                    print("Eyes")
+                    eyes_roi = roi_color[ey: ey+eh, ex:ex + ew]
+                    cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+                    cv2.imwrite("cropped.jpg", eyes_roi)
+          
+	# You'll want to release the camera, otherwise you won't be able to create a new
+        # capture object until your script exits
+        cv2.imshow("Cropped Image", eyes_roi)
+    #FILE OPEN
+
         print("Loading acceptance class")
         self.acceptancewindow = acceptance("out.jpg")
 ##        print("Displaying Image")
