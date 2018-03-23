@@ -268,19 +268,23 @@ class imagecapture(QMainWindow):
         #camera = PiCamera()
         with PiCamera() as camera:
             camera.resolution = (1024, 768)
-            camera.start_preview()
+            
     # Camera warm-up time
             time.sleep(2)
+            camera.start_preview()
             camera.brightness = 60
-            camera.resolution = (640, 480)
-        
-            key = input("Press Q to end")
-            rawCapture = PiRGBArray(camera, size=(640, 480))
+            #camera.resolution = (640, 480)
+            print("Waiting to take picture")
+            time.sleep(4)
+            camera.capture('patient.jpg')
+            #rawCapture = PiRGBArray(camera, size=(640, 480))
+            #image = rawCapture.array
+            #cv2.imwrite("patient.jpg",image)
             #camera.framerate = 32
             #camera.start_preview(fullscreen=False, window=(100,100,256,192))
             #time.sleep(2)
             #camera.preview.window=(200,200,256,192)
-            #camera.capture('patient.jpg', format="bgr")
+            
         
             # allow the camera to warmup
 ##        time.sleep(0.1)
@@ -302,21 +306,18 @@ class imagecapture(QMainWindow):
 ##            if key == ord("q"):
 ##                break
         # convert picamera image to opencv array
-        image = rawCapture.array
-        cv2.imwrite("patient.jpg",image)
+        
 ##        cv2.waitKey(0)
 ##        cv2.destroyAllWindows()
         # CROPPING #
         eyePair_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         #cv2.imshow("Gray", gray)
-        eyes = eyePair_cascade.detectMultiScale(roi_gray)
-        if len(eyes) == 0: return
-        for (ex,ey,ew,eh) in eyes:
-            print("Eyes")
-            eyes_roi = roi_color[ey: ey+eh, ex:ex+ew]
-            cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-            cv2.imwrite("newa.jpg", eyes_roi)
+##        for (ex,ey,ew,eh) in eyes:
+##            print("Eyes")
+##            eyes_roi = roi_color[ey: ey+eh, ex:ex+ew]
+##            cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+##            cv2.imwrite("newa.jpg", eyes_roi)
           
 	# You'll want to release the camera, otherwise you won't be able to create a new
         # capture object until your script exits
@@ -325,7 +326,7 @@ class imagecapture(QMainWindow):
 
         print("Loading acceptance class")
         #self.acceptancewindow = acceptance("out.jpg")
-        self.acceptancewindow = acceptance("eye.jpg")
+        self.acceptancewindow = acceptance("patient.jpg")
         
 ##        print("Displaying Image")
 ##        img = cv2.imread("normaleye.jpg")
@@ -385,12 +386,21 @@ class acceptance(QWidget):
 
             print(json_data)
             Results = ""
+            Prediction=""
             for tag in range(len(json_data)):
-                print("The chance of ",json_data['Predictions'][tag]['Tag'],"is:")
-                print("Probability is: ",round(json_data['Predictions'][tag]['Probability']*100,2),"%")
+                #print("The chance of ",json_data['Predictions'][tag]['Tag'],"is:")
+                #print("Probability is: ",round(json_data['Predictions'][tag]['Probability']*100,2),"%")
                 Results+="The chance of {} is: {} % \n\n".format(json_data['Predictions'][tag]['Tag'],round(json_data['Predictions'][tag]['Probability']*100,2))
+                if(round(json_data['Predictions'][tag]['Probability']*100,2)<50):
+                    print("The chance of {} is: {} % \n\n".format(json_data['Predictions'][tag]['Tag'],round(json_data['Predictions'][tag]['Probability']*100,2)))
+                    Prediction="No White Rings"
+                    break
+                else:
+                    Prediction="White Rings detected"
+                    break
+            
             QMessageBox.information(self, "Analysis Result",
-                                        "\n"+Results)
+                                        "\n"+Prediction)
             conn.close()
         except Exception as e:
             print(e)
@@ -467,7 +477,7 @@ class acceptance(QWidget):
         self.show()
 
     def switchWindow(self):
-        self.fourth = QWidget()
+        self.fourth = imagecapture()
         self.close()
 
     # def switchWindow(self):

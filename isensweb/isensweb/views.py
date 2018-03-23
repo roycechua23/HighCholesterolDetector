@@ -21,10 +21,9 @@ mysql.init_app(app)
 @app.route('/home')
 def home():
     """Renders the home page."""
-<<<<<<< HEAD
     cursor = mysql.get_db().cursor()
-    sql = "SELECT * FROM 
-=======
+    sql = "SELECT * FROM patient_record"
+
     conn = mysql.connect()
     cursor = conn.cursor()
     sql = "SELECT * FROM patient_record"
@@ -35,7 +34,6 @@ def home():
     print(records)
     conn.close()
 
->>>>>>> c4f4cf5fe9163a0f6f3abfb205e310e941d7ff6d
     return render_template(
         'index.html',
         title='Home Page',
