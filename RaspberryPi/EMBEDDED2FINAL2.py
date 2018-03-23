@@ -266,7 +266,7 @@ class imagecapture(QMainWindow):
         
 ##        print("Creating a camera instance")
         #camera = PiCamera()
-        with picamera.PiCamera() as camera:
+        with PiCamera() as camera:
             camera.resolution = (1024, 768)
             camera.start_preview()
     # Camera warm-up time
@@ -308,7 +308,7 @@ class imagecapture(QMainWindow):
 ##        cv2.destroyAllWindows()
         # CROPPING #
         eyePair_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         #cv2.imshow("Gray", gray)
         eyes = eyePair_cascade.detectMultiScale(roi_gray)
         if len(eyes) == 0: return
