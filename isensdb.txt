@@ -4,3 +4,5 @@ use isensdb;
 CREATE TABLE patient_record(id INT PRIMARY KEY AUTO_INCREMENT,name VARCHAR (45),gender VARCHAR(45), age int, contactno VARCHAR(15),address VARCHAR(200));
 
 CREATE TABLE patient_result(patient_id INT, FOREIGN KEY(patient_id) REFERENCES patient_record(id), tag1 VARCHAR(200), probability1 VARCHAR(10), tag2 VARCHAR(200), probability2 VARCHAR(10), tag3 VARCHAR(200), probability3 VARCHAR(10), tag4 VARCHAR(200), probability4 VARCHAR(10), tag5 VARCHAR(200), probability5 VARCHAR(10));
+
+CREATE TABLE patient_result(id int, FOREIGN KEY (id) REFERENCES patient_record(id), name varchar(45),result varchar(100));

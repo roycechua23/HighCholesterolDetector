@@ -25,4 +25,21 @@
         
         </table>
 
+        <p>Patient Result Information</p>
+        <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Result</th>
+                </tr>
+                {% for row in range(resultrows) %}
+                <tr>
+                        {% for col in range(resultcolumns) %}
+                            <td>{{ results[row][col] }}</td>
+                        {% endfor %}
+                </tr>
+                {% endfor %}
+                
+                </table>
+
 {% endblock %}

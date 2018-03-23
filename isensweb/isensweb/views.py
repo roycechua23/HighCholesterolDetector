@@ -21,21 +21,6 @@ mysql.init_app(app)
 @app.route('/home')
 def home():
     """Renders the home page."""
-<<<<<<< HEAD
-=======
-    cursor = mysql.get_db().cursor()
-    sql = "SELECT * FROM patient_record"
-
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    sql = "SELECT * FROM patient_record"
-    cursor.execute(sql)
-    records = cursor.fetchall()
-    patientrows = len(records)
-    patientcolumns = len(records[0])
-    print(records)
-    conn.close()
->>>>>>> b4c44df32a072b13bb422f4ace7c7bf4a8fea92a
 
     return render_template(
         'index.html',
@@ -63,8 +48,13 @@ def about():
     patientrecords = cursor.fetchall()
     patientrows = len(patientrecords)
     patientcolumns = len(patientrecords[0])
-    print(patientrecords)
+    #print(patientrecords)
     sql = "SELECT * FROM patient_result"
+    cursor.execute(sql)
+    patientresultsrecords = cursor.fetchall()
+    #print(patientresultsrecords)
+    patientresultsrows = len(patientresultsrecords)
+    patientresultscolumns = len(patientresultsrecords[0])
     conn.close()
 
     return render_template(
@@ -73,6 +63,9 @@ def about():
         patients=patientrecords,
         rows=patientrows,
         columns=patientcolumns,
+        results=patientresultsrecords,
+        resultrows=patientresultsrows,
+        resultcolumns=patientresultscolumns,
         year=datetime.now().year,
         message='View patient records here'
     )
