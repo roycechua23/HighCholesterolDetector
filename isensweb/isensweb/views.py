@@ -14,18 +14,29 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = ''
 app.config['MYSQL_DATABASE_DB'] = 'isensdb'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_PORT'] = '3306'
+app.config['MYSQL_DATABASE_PORT'] = 3306
 mysql.init_app(app)
 
 @app.route('/')
 @app.route('/home')
 def home():
     """Renders the home page."""
-    cursor = mysql.get_db().cursor()
-    
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    sql = "SELECT * FROM patient_record"
+    cursor.execute(sql)
+    records = cursor.fetchall()
+    patientrows = len(records)
+    patientcolumns = len(records[0])
+    print(records)
+    conn.close()
+
     return render_template(
         'index.html',
         title='Home Page',
+        patients=records,
+        rows=patientrows,
+        columns=patientcolumns,
         year=datetime.now().year,
     )
 
