@@ -264,75 +264,45 @@ class imagecapture(QMainWindow):
 
     def cam(self):
         
-##        print("Creating a camera instance")
         camera = PiCamera()
+        print("Instantiating camera")
         camera.brightness = 60
         camera.resolution = (640, 480)
-        #camera.framerate = 32
-        camera.start_preview(fullscreen=False, window=(100,100,256,192))
-        time.sleep(2)
-        camera.preview.window=(200,200,256,192)
+        camera.framerate = 32
         rawCapture = PiRGBArray(camera, size=(640, 480))
-        # allow the camera to warmup
+ 
+# allow the camera to warmup
         time.sleep(0.1)
-##        print("Entering loop")
-##        # capture frames from the camera
-##        for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-##            # grab the raw NumPy array representing the image, then initialize the timestamp
-##            # and occupied/unoccupied text
-##            image = frame.array
-## 
-##            # show the frame
-##            cv2.imshow("Frame", image)
-##            key = cv2.waitKey(1) & 0xFF
-## 
-##            # clear the stream in preparation for the next frame
-##            rawCapture.truncate(0)
-## 
-##            # if the `q` key was pressed, break from the loop
-##            if key == ord("q"):
-##                break
-        
-        # grab an image from the camera
-        camera.capture(rawCapture, format="bgr")
-        image = rawCapture.array
-        #cv2.imshow('Capture Frame', image)
-        cv2.imwrite("out.jpg",image)
-##        cv2.waitKey(0)
-##        cv2.destroyAllWindows()
-        # CROPPING #
-        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-        print("Dumaan dito1")
-        eyePair_cascade = cv2.CascadeClassifier('haarcascade_mcs_eyepair_big.xml')
-        print("Dumaan dito")
-        img = cv2.imread("out.jpg")
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        #cv2.imshow("Gray", gray)
-        print("Grayscale")
-        cv2.imwrite("Image_Gray.jpg", gray)
-        print("Grayscale 2")
-        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-        print("Face Detected")
-        for x,y,w,h in faces:
-            print("For Faces")
-            roi_gray = gray[y:y+h, x:x+w]
-            roi_color = img[y:y+h, x:x+w]
-            eyes = eyePair_cascade.detectMultiScale(roi_gray)
-            if len(eyes) == 0: return
-            for (ex,ey,ew,eh) in eyes:
-                print("Eyes")
-                eyes_roi = roi_color[ey: ey+eh, ex:ex + ew]
-                cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-                cv2.imwrite("cropped.jpg", eyes_roi)
-          
-	# You'll want to release the camera, otherwise you won't be able to create a new
-        # capture object until your script exits
-        #cv2.imshow("Cropped Image", eyes_roi)
-    #FILE OPEN
+        print("Entering loop")
+# capture frames from the camera
+        for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+            print("Entered Loop")
+	# grab the raw NumPy array representing the image, then initialize the timestamp
+	# and occupied/unoccupied text
+            image = frame.array
+            print("Image Loop")
+	# detect face
+            eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            print("Before Eye")
+            eye = eye_cascade.detectMultiScale(gray, 1.3, 5)
+            print("EYE")
+
+            for (ex,ey,ew,eh) in eye:
+                cv2.rectangle(image, (ex,ey), (ex+ew,ey+eh), (0,255,0), 2)
+                roi_color = image[ey:ey+eh, ex:ex+ew]
+                print("Eye Cropped")
+            rawCapture.truncate(0)
+            if key == ord("q"):
+                break
+
+        cv2.imshow("ROI Eye", roi_color)
+        cv2.imwrite("Eyetaken.jpg",roi_color)
+        cv2.destroyAllWindows()
 
         print("Loading acceptance class")
         #self.acceptancewindow = acceptance("out.jpg")
-        self.acceptancewindow = acceptance("eye.jpg")
+        self.acceptancewindow = acceptance("Eyetaken.jpg")
         
 ##        print("Displaying Image")
 ##        img = cv2.imread("normaleye.jpg")
@@ -487,3 +457,4 @@ if __name__=='__main__':
     app = QApplication(sys.argv)
     main = App()
 sys.exit(app.exec())
+

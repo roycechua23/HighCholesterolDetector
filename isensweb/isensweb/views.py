@@ -5,11 +5,24 @@ Routes and views for the flask application.
 from datetime import datetime
 from flask import render_template
 from isensweb import app
+from flaskext.mysql import MySQL
+
+mysql = MySQL()
+ 
+# MySQL configurations
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = ''
+app.config['MYSQL_DATABASE_DB'] = 'isensdb'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_PORT'] = '3306'
+mysql.init_app(app)
 
 @app.route('/')
 @app.route('/home')
 def home():
     """Renders the home page."""
+    cursor = mysql.get_db().cursor()
+    
     return render_template(
         'index.html',
         title='Home Page',
