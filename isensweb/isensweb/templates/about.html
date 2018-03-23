@@ -5,6 +5,24 @@
 <h2>{{ title }}.</h2>
 <h3>{{ message }}</h3>
 
-<p>Use this area to provide additional information.</p>
+<p>Patient Registration Information</p>
+<table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Contact</th>
+            <th>Address</th>
+        </tr>
+        {% for row in range(rows) %}
+        <tr>
+                {% for col in range(columns) %}
+                    <td>{{ patients[row][col] }}</td>
+                {% endfor %}
+        </tr>
+        {% endfor %}
+        
+        </table>
 
 {% endblock %}

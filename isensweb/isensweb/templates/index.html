@@ -3,9 +3,13 @@
 {% block content %}
 
 <div class="jumbotron">
-    <h1>Flask</h1>
-    <p class="lead">Flask is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://flask.pocoo.org/" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    <h1>Isens</h1>
+    <p class="lead">The project is designed to detect high cholesterol level using a camera that will capture the image of the eye
+            on a fixed distance and then the image will be processed to determine if the patient needs to be consulted or
+            not.</p>
+    <!-- <p><a href="http://flask.pocoo.org/" class="btn btn-primary btn-large">Learn more &raquo;</a></p> -->
+    <h2>Instructional</h2>
+    <br>
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
@@ -15,19 +19,25 @@
             </ol>
           
             <!-- Wrapper for slides -->
-            <div class="carousel-inner" role="listbox">
-              <div class="item active">
-                <img src="..." alt="...">
-                <div class="carousel-caption">
-                  ...
+            <div class="carousel-inner" role="listbox" align="center">
+              <div class="item active" >
+                <img src="../static/images/fillup.png" alt="...">
+                <div>
+                    Fill up the form for personal identification.<br>
                 </div>
               </div>
               <div class="item">
-                <img src="..." alt="...">
-                <div class="carousel-caption">
-                  ...
+                <img src="../static/images/camera.png" alt="...">
+                <div >
+                        Take a picture of the eye using camera.<br>
                 </div>
               </div>
+              <div class="item">
+                    <img src="../static/images/analysis.png" alt="...">
+                    <div >
+                            Send the data to be analyzed.<br>
+                    </div>
+                  </div>
               ...
             </div>
           
@@ -41,45 +51,42 @@
               <span class="sr-only">Next</span>
             </a>
           </div>
-    <table class="table">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Gender</th>
-        <th>Contact</th>
-        <th>Address</th>
-    </tr>
-    {% for row in range(rows) %}
-    <tr>
-            {% for col in range(columns) %}
-                <td>{{ patients[row][col] }}</td>
-            {% endfor %}
-    </tr>
-    {% endfor %}
+          <br>
+          <p>Follow these steps to use to program.</p>
     
-    </table>
 </div>
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Getting started</h2>
+        <h2>More info</h2>
         <p>
-            Flask gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
+            The image processing technique determines it by checking the eyes corneal margin if an Arcus Juvenilis 
+            is present which indicates high cholesterol level.
         </p>
-        <p><a class="btn btn-default" href="http://flask.pocoo.org/docs/">Learn more &raquo;</a></p>
+        <p>
+            Arcus Juvenilis is a white or gray opaque ring in the corneal
+            margin commonly caused by high cholesterol level occurs on young people aged below 40. While Arcus
+        </p>
+        <p><a class="btn btn-default" href="http://www.drbishop.com/view/article_210.3conx">Learn more &raquo;</a></p>
     </div>
     <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>The Python Package Index is a repository of software for the Python programming language.</p>
-        <p><a class="btn btn-default" href="https://pypi.python.org/pypi">Learn more &raquo;</a></p>
+        <h2>Facts</h2>
+        <p>Senilis is a condition frequently occur on aged person that is similar to Arcus Juvenilis which also appears
+                white or gray opaque ring in the eyes. </p>
+        <p>
+                The
+                white rings are caused by cholesterol deposits in or hyaline degeneration of the corneal stroma. In fact, on
+                a statistics of an eye exam results made by Optum in behalf of United Healthcare group out of 72,534 persons
+                the people with high cholesterol resulted to be 34,025, which is 46.9% of the total people who took the eye
+                exam.
+        </p>
+        <p><a class="btn btn-default" href="https://www.medicalnewstoday.com/articles/319490.php">Learn more &raquo;</a></p>
     </div>
     <div class="col-md-4">
-        <h2>Microsoft Azure</h2>
-        <p>You can easily publish to Microsoft Azure using Visual Studio. Find out how you can host your application using a free trial today.</p>
-        <p><a class="btn btn-default" href="http://azure.microsoft.com">Learn more &raquo;</a></p>
+        <h2>Constraints</h2>
+        <p>The designers decided to limit the project to be used only on people
+            aged below 40 as the results on aged people may be confused to the Arcus Senilis caused by aging.</p>
+        <p><a class="btn btn-default" href="http://www.drbishop.com/view/article_210.3conx">Learn more &raquo;</a></p>
     </div>
 </div>
 
