@@ -220,6 +220,7 @@ class Dialog(QDialog):
                                                                                             self.address),
                                             QMessageBox.Ok,QMessageBox.Ok)
                     
+                name = self.name
                 self.thirdi = imagecapture()
 
                 self.close()
@@ -402,6 +403,16 @@ class acceptance(QWidget):
             QMessageBox.information(self, "Analysis Result",
                                         "\n"+Prediction)
             conn.close()
+            conn = pymysql.connect("localhost","root","","isensdb")
+            cursor = conn.cursor()
+            sql = "SELECT COUNT(*) FROM patient_record"
+            cursor.execute(sql)
+            current_id = cursor.fetchone()
+            sql = "INSERT INTO patient_result VALUES ({},{},{})".format(current_id,name,Prediction)
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
+            
         except Exception as e:
             print(e)
             # print("An error occured")
