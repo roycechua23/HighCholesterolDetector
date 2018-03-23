@@ -22,7 +22,7 @@ mysql.init_app(app)
 def home():
     """Renders the home page."""
     cursor = mysql.get_db().cursor()
-    
+    sql = "SELECT * FROM 
     return render_template(
         'index.html',
         title='Home Page',

@@ -263,27 +263,37 @@ class imagecapture(QMainWindow):
  
 
     def cam(self):
+        camera = PiCamera()
+        print("Instantiating camera")
+        camera.brightness = 60
+        camera.resolution = (640, 480)
+        camera.framerate = 32
+        rawCapture = PiRGBArray(camera, size=(640, 480))
+ 
+# allow the camera to warmup
+        time.sleep(0.1)
+        print("Entering loop")
+ 
+        for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+            print("Entered the Loop")
+            eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+            print("I have read your xml file")
+            image = frame.array
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            eye = eye_cascade.detectMultiScale(gray, 1.3, 5)
+            print("I have read your xml file")
+            for (ex,ey,ew,eh) in eye:
+                print("For Loop Entered")
+                cv2.rectangle(image, (ex,ey), (ex+ew,ey+eh), (0,255,0), 2)
+                roi_color = image[ey:ey+eh, ex:ex+ew]
+                print("About to Capture Image")
+            rawCapture.truncate(0)
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                print("Capture Image")
+                break
+        cv2.imwrite("Eyetaken.jpg",roi_color)
         
-##        print("Creating a camera instance")
-        #camera = PiCamera()
-        with picamera.PiCamera() as camera:
-            camera.resolution = (1024, 768)
-            camera.start_preview()
-    # Camera warm-up time
-            time.sleep(2)
-            camera.brightness = 60
-            camera.resolution = (640, 480)
-        
-            key = input("Press Q to end")
-            rawCapture = PiRGBArray(camera, size=(640, 480))
-            #camera.framerate = 32
-            #camera.start_preview(fullscreen=False, window=(100,100,256,192))
-            #time.sleep(2)
-            #camera.preview.window=(200,200,256,192)
-            #camera.capture('patient.jpg', format="bgr")
-        
-            # allow the camera to warmup
-##        time.sleep(0.1)
+
 ##        print("Entering loop")
 ##        # capture frames from the camera
 ##        for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -301,22 +311,8 @@ class imagecapture(QMainWindow):
 ##            # if the `q` key was pressed, break from the loop
 ##            if key == ord("q"):
 ##                break
-        # convert picamera image to opencv array
-        image = rawCapture.array
-        cv2.imwrite("patient.jpg",image)
-##        cv2.waitKey(0)
-##        cv2.destroyAllWindows()
-        # CROPPING #
-        eyePair_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        #cv2.imshow("Gray", gray)
-        eyes = eyePair_cascade.detectMultiScale(roi_gray)
-        if len(eyes) == 0: return
-        for (ex,ey,ew,eh) in eyes:
-            print("Eyes")
-            eyes_roi = roi_color[ey: ey+eh, ex:ex+ew]
-            cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-            cv2.imwrite("newa.jpg", eyes_roi)
+        
+        # grab an image from the camera
           
 	# You'll want to release the camera, otherwise you won't be able to create a new
         # capture object until your script exits
@@ -325,7 +321,7 @@ class imagecapture(QMainWindow):
 
         print("Loading acceptance class")
         #self.acceptancewindow = acceptance("out.jpg")
-        self.acceptancewindow = acceptance("eye.jpg")
+        self.acceptancewindow = acceptance("Eyetaken.jpg")
         
 ##        print("Displaying Image")
 ##        img = cv2.imread("normaleye.jpg")
