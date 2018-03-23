@@ -408,10 +408,13 @@ class acceptance(QWidget):
             sql = "SELECT COUNT(*) FROM patient_record"
             cursor.execute(sql)
             current_id = cursor.fetchone()
-            sql = "INSERT INTO patient_result VALUES ({},{},{})".format(current_id,name,Prediction)
+            sql = "INSERT INTO patient_result VALUES ({},'{}','{}')".format(current_id[0],"John",Prediction)
+            print(sql)
             cursor.execute(sql)
             conn.commit()
             conn.close()
+            QMessageBox.information(self, "Database Connection",
+                                        "\n"+"Loaded Result to Database")
             
         except Exception as e:
             print(e)
