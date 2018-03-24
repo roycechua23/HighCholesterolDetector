@@ -408,7 +408,9 @@ class acceptance(QWidget):
             sql = "SELECT COUNT(*) FROM patient_record"
             cursor.execute(sql)
             current_id = cursor.fetchone()
-            sql = "INSERT INTO patient_result VALUES ({},'{}','{}')".format(current_id[0],"John",Prediction)
+            # change name to "John" Whenever testing
+            # name is for final integration (after the fill up window)
+            sql = "INSERT INTO patient_result VALUES ({},'{}','{}')".format(current_id[0],name,Prediction)
             print(sql)
             cursor.execute(sql)
             conn.commit()
